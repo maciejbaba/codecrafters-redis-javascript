@@ -17,7 +17,7 @@ const server = net.createServer((connection) => {
     } else if (command === "SET") {
       const key = commands[4];
       const value = commands[6];
-      state[key] = value;
+      store[key] = value;
       connection.write(`+OK\r\n`);
     } else if (command === "GET") {
       const key = commands[4];
