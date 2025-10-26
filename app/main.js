@@ -9,7 +9,7 @@ const server = net.createServer((connection) => {
     console.log(data.toString());
     if (data.toString() === "PING\r\n") {
       connection.write("+PONG\r\n");
-    } else if (data.toString().startsWith("ECHO ")) {
+    } else if (data.toString().startsWith("ECHO")) {
       connection.write(`+${data.toString().split(" ")[1]}\r\n`);
     } else {
       connection.write("-ERR unknown command 'PING'\r\n");
