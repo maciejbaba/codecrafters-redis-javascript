@@ -5,9 +5,9 @@ console.log("Logs from your program will appear here!");
 
 // Uncomment the code below to pass the first stage
 const server = net.createServer((connection) => {
-  connection.on("data", (data, args) => {
+  connection.on("data", (data) => {
     const command = data.toString();
-    console.log(args);
+    console.log(command);
     if (command === "PING\r\n") {
       connection.write("+PONG\r\n");
     } else if (command.startsWith("ECHO")) {
