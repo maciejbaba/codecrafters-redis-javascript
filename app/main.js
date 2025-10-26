@@ -5,7 +5,7 @@ console.log("Logs from your program will appear here!");
 
 // Uncomment the code below to pass the first stage
 const server = net.createServer((connection) => {
-  const state = {};
+  const store = {};
   connection.on("data", (data) => {
     const commands = data.toString().split("\r\n");
     const command = commands[2];
