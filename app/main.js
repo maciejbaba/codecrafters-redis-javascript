@@ -7,11 +7,12 @@ console.log("Logs from your program will appear here!");
 const server = net.createServer((connection) => {
   connection.on("data", (data) => {
     const commands = data.toString().split("\r\n");
-    console.log(commands);
-    if (commands[0] === "PING") {
+    const command = commands[2];
+    if (command === "PING") {
       connection.write("+PONG\r\n");
-    } else if (commands[0] === "ECHO") {
-      connection.write(`+${commands[1]}\r\n`);
+    } else if (command === "ECHO") {
+      const message = commands[4];
+      connection.write(`+${message}\r\n`);
     } else {
       connection.write("-ERR unknown command 'PING'\r\n");
     }
