@@ -5,12 +5,13 @@ console.log("Logs from your program will appear here!");
 
 // Uncomment the code below to pass the first stage
 const server = net.createServer((connection) => {
-  connection.on("data", (data) => {
-    console.log(data.toString());
-    if (data.toString() === "PING\r\n") {
+  connection.on("data", (data, args) => {
+    const command = data.toString();
+    console.log(args);
+    if (command === "PING\r\n") {
       connection.write("+PONG\r\n");
-    } else if (data.toString().startsWith("ECHO")) {
-      connection.write(`+${data.toString().split(" ")[1]}\r\n`);
+    } else if (command.startsWith("ECHO")) {
+      connection.write(`+${command.split(" ")[1]}\r\n`);
     } else {
       connection.write("-ERR unknown command 'PING'\r\n");
     }
