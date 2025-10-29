@@ -17,11 +17,44 @@ const server = net.createServer((connection) => {
     } else if (command === "SET") {
       const key = commands[4];
       const value = commands[6];
-      store[key] = value;
-      connection.write(`+OK\r\n`);
+
+      const expiry = commands[8];
+      const expiryValue = commands[10];
+
+      if (!expiry || !expiryValue) {
+        store[key] = {
+          value,
+          expiry: null,
+        };
+        connection.write(`+OK\r\n`);
+        return;
+      }
+
+      if (expiry === "EX") {
+        store[key] = {
+          value,
+          expiry: Date.now() + expiryValue * 1000,
+        };
+        connection.write(`+OK\r\n`);
+        return;
+      } else if (expiry === "PX") {
+        store[key] = {
+          value,
+          expiry: Date.now() + expiryValue,
+        };
+        connection.write(`+OK\r\n`);
+        return;
+      }
     } else if (command === "GET") {
       const key = commands[4];
-      const value = store[key];
+      const storeValue = store[key];
+      const expiry = storeValue[expiry];
+
+      if (expiry && Date.now() >= expiry) {
+        connection.write(`$-1\r\n`);
+        store[key] = undefined;
+      }
+      const value = storeValue[value];
       if (value) {
         connection.write(`+${value}\r\n`);
       } else {
