@@ -69,16 +69,13 @@ const rPushHandler = (connection, commands) => {
   const listKey = commands[4];
   const element = commands[6];
 
-  console.log(listKey);
-  console.log(element);
   const storeValue = store[listKey];
-  console.log(storeValue)
   if (!storeValue) {
     store[listKey] = [element];
   } else {
     store[listKey] = [...store[listKey], element];
   }
-  connection.write(`+${store[listKey].length}\r\n`);
+  connection.write(`:${store[listKey].length}\r\n`);
 };
 
 // Uncomment the code below to pass the first stage
