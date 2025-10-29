@@ -56,6 +56,7 @@ const server = net.createServer((connection) => {
       if (expiry && Date.now() >= expiry) {
         connection.write(`$-1\r\n`);
         store[key] = undefined;
+        return;
       }
       const value = storeValue.value;
       if (value) {
