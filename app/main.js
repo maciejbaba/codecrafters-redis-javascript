@@ -19,7 +19,7 @@ const server = net.createServer((connection) => {
       const value = commands[6];
 
       const expiry = commands[8];
-      const expiryValue = commands[10];
+      const expiryValue = Number(commands[10]);
 
       if (!expiry || !expiryValue) {
         store[key] = {
