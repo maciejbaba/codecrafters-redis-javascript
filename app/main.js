@@ -67,13 +67,20 @@ const getHandler = (connection, commands) => {
 
 const rPushHandler = (connection, commands) => {
   const listKey = commands[4];
-  const element = commands[6];
+
+  let startIndex = 6;
+  const elements = [];
+
+  while (commands[startIndex]) {
+    elements.push(commands[startIndex]);
+    startIndex += 2;
+  }
 
   const storeValue = store[listKey];
   if (!storeValue) {
-    store[listKey] = [element];
+    store[listKey] = [...elements];
   } else {
-    store[listKey] = [...store[listKey], element];
+    store[listKey] = [...store[listKey], elements];
   }
   connection.write(`:${store[listKey].length}\r\n`);
 };
