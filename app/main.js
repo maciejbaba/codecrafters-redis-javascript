@@ -65,6 +65,19 @@ const getHandler = (connection, commands) => {
   }
 };
 
+const rPushHandler = (connection, commands) => {
+  const listKey = commands[4];
+  const element = commands[6];
+
+  const storeValue = store[listKey];
+  if (!storeValue) {
+    store[listKey] = [element];
+  } else {
+    store[listKey] = [...store[listKey], element];
+  }
+  connection.write(`+${store[listKey].length}\r\n`);
+};
+
 // Uncomment the code below to pass the first stage
 const server = net.createServer((connection) => {
   connection.on("data", (data) => {
@@ -83,6 +96,9 @@ const server = net.createServer((connection) => {
         break;
       case "GET":
         getHandler(connection, commands);
+        break;
+      case "RPUSH":
+        rPushHandler(connection, commands);
         break;
       default:
         connection.write("-ERR unknown command\r\n");
