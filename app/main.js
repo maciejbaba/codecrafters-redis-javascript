@@ -50,7 +50,7 @@ const server = net.createServer((connection) => {
       const storeValue = store[key];
       const expiry = storeValue.expiry;
 
-      console.log(storeValue);
+      console.log(new Date(expiry))
       console.log(Date.now())
 
       if (expiry && Date.now() >= expiry) {
