@@ -28,7 +28,7 @@ const server = net.createServer((connection) => {
         connection.write(`$-1\r\n`);
       }
     } else {
-      connection.write("-ERR unknown command 'PING'\r\n");
+      connection.write("-ERR unknown command\r\n");
     }
   });
 });
