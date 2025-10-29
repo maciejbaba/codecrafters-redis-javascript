@@ -77,6 +77,7 @@ const rPushHandler = (connection, commands) => {
   }
 
   const storeValue = store[listKey];
+  console.log(storeValue)
   if (!storeValue) {
     store[listKey] = [...elements];
   } else {
