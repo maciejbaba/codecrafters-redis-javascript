@@ -48,13 +48,13 @@ const server = net.createServer((connection) => {
     } else if (command === "GET") {
       const key = commands[4];
       const storeValue = store[key];
-      const expiry = storeValue[expiry];
+      const expiry = storeValue.expiry;
 
       if (expiry && Date.now() >= expiry) {
         connection.write(`$-1\r\n`);
         store[key] = undefined;
       }
-      const value = storeValue[value];
+      const value = storeValue.value;
       if (value) {
         connection.write(`+${value}\r\n`);
       } else {
