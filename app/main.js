@@ -107,7 +107,7 @@ const lRangeHandler = (connection, commands) => {
   const endIndex = Number(commands[8]);
 
   // start index bigger than end index - empty array return
-  if (startIndex > endIndex) {
+  if (startIndex > endIndex && endIndex > 0) {
     connection.write(response.emptyArray);
     return;
   }
@@ -118,7 +118,6 @@ const lRangeHandler = (connection, commands) => {
     connection.write(response.emptyArray);
     return;
   }
-
 
   const requestedList = list.slice(startIndex, endIndex + 1);
 
