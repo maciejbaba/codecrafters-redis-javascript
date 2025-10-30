@@ -122,7 +122,7 @@ const lRangeHandler = (connection, commands) => {
     return;
   }
 
-  const requestedList = list.slice(startIndex, endIndex < 0 ? endIndex : endIndex + 1);
+  const requestedList = list.slice(startIndex, endIndex < 0 ? endIndex + 1 : endIndex + 1);
   console.log(startIndex)
   console.log(endIndex)
   let res = `*${requestedList.length}\r\n`;
