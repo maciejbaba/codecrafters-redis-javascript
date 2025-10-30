@@ -1,12 +1,19 @@
 const net = require("net");
 
+const response = {
+  emptyArray: "*0\r\n",
+  ok: "+OK\r\n",
+  pong: "+PONG\r\n",
+  emptyGet: "$-1\r\n",
+};
+
 // You can use print statements as follows for debugging, they'll be visible when running tests.
 console.log("Logs from your program will appear here!");
 
 const store = {};
 
 const pingHandler = (connection) => {
-  connection.write("+PONG\r\n");
+  connection.write(response.pong);
 };
 
 const echoHandler = (connection, commands) => {
@@ -26,7 +33,7 @@ const setHandler = (connection, commands) => {
       value,
       expiry: null,
     };
-    connection.write(`+OK\r\n`);
+    connection.write(response.ok);
     return;
   }
 
@@ -35,14 +42,14 @@ const setHandler = (connection, commands) => {
       value,
       expiry: Date.now() + expiryValue * 1000,
     };
-    connection.write(`+OK\r\n`);
+    connection.write(response.ok);
     return;
   } else if (expiry === "PX") {
     store[key] = {
       value,
       expiry: Date.now() + expiryValue,
     };
-    connection.write(`+OK\r\n`);
+    connection.write(response.ok);
     return;
   }
 };
@@ -53,7 +60,7 @@ const getHandler = (connection, commands) => {
   const expiry = storeValue.expiry;
 
   if (expiry && Date.now() >= expiry) {
-    connection.write(`$-1\r\n`);
+    connection.write(response.emptyGet);
     store[key] = undefined;
     return;
   }
@@ -61,7 +68,7 @@ const getHandler = (connection, commands) => {
   if (value) {
     connection.write(`+${value}\r\n`);
   } else {
-    connection.write(`$-1\r\n`);
+    connection.write(response.emptyGet);
   }
 };
 
@@ -83,6 +90,46 @@ const rPushHandler = (connection, commands) => {
     store[listKey] = [...store[listKey], ...elements];
   }
   connection.write(`:${store[listKey].length}\r\n`);
+};
+
+const lRangeHandler = (connection, commands) => {
+  const listKey = commands[4];
+
+  const list = store[listKey];
+
+  // not defined list in the store - empty array return
+  if (!list) {
+    connection.write(response.emptyArray);
+    return;
+  }
+
+  const startIndex = commands[6];
+  const endIndex = commands[8];
+
+  // start index bigger than end index - empty array return
+  if (startIndex > endIndex) {
+    connection.write(response.emptyArray);
+    return;
+  }
+
+  // start greater or equal list length - empty array return
+  const listLength = list.length;
+  if (startIndex >= listLength) {
+    connection.write(response.emptyArray);
+    return;
+  }
+
+  const requestedList = list.slice(startIndex, endIndex);
+
+  let res = "";
+  res += `*${requestedList.length}\r\n`;
+
+  requestedList.forEach((element) => {
+    res += `$${element.length}\r\n`;
+    res += `${element}\r\n`;
+  });
+
+  connection.write(res);
 };
 
 // Uncomment the code below to pass the first stage
