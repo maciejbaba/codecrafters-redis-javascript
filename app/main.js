@@ -103,6 +103,7 @@ const lRangeHandler = (connection, commands) => {
     return;
   }
 
+
   const startIndex = Number(commands[6]);
   const endIndex = Number(commands[8]);
 
