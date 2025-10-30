@@ -103,7 +103,10 @@ const lRangeHandler = (connection, commands) => {
     return;
   }
 
-  const startIndex = Number(commands[6]);
+  const startIndex =
+    Number(commands[6]) < 0
+      ? list.length - Number(Math.abs(commands[6]))
+      : Number(commands[6]);
   const endIndex = Number(commands[8]);
 
   // start index bigger than end index - empty array return
@@ -120,7 +123,6 @@ const lRangeHandler = (connection, commands) => {
   }
 
   const requestedList = list.slice(startIndex, endIndex + 1);
-  console.log(requestedList);
   let res = `*${requestedList.length}\r\n`;
 
   requestedList.forEach((element) => {
