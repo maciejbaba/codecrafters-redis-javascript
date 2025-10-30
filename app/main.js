@@ -103,8 +103,8 @@ const lRangeHandler = (connection, commands) => {
     return;
   }
 
-  const startIndex = commands[6];
-  const endIndex = commands[8];
+  const startIndex = Number(commands[6]);
+  const endIndex = Number(commands[8]);
 
   // start index bigger than end index - empty array return
   if (startIndex > endIndex) {
@@ -121,7 +121,7 @@ const lRangeHandler = (connection, commands) => {
 
   console.log("startIndex", startIndex);
   console.log("endIndex", endIndex);
-  console.log("list", list)
+  console.log("list", list);
   const requestedList = list.slice(startIndex, endIndex + 1);
   console.log("requestedList", requestedList);
 
