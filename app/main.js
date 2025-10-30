@@ -129,6 +129,8 @@ const lRangeHandler = (connection, commands) => {
     res += `${element}\r\n`;
   });
 
+  console.log(res)
+
   connection.write(res);
 };
 
