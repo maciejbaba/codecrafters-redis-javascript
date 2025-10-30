@@ -105,7 +105,9 @@ const lRangeHandler = (connection, commands) => {
 
   const startIndex =
     Number(commands[6]) < 0
-      ? list.length - Number(Math.abs(commands[6]))
+      ? list.length < Number(Math.abs(commands[6]))
+        ? list.length
+        : list.length - Number(Math.abs(commands[6]))
       : Number(commands[6]);
   const endIndex = Number(commands[8]);
 
