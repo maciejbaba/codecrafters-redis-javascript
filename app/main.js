@@ -129,8 +129,6 @@ const lRangeHandler = (connection, commands) => {
     res += `${element}\r\n`;
   });
 
-  console.log(res)
-
   connection.write(res);
 };
 
@@ -155,6 +153,9 @@ const server = net.createServer((connection) => {
         break;
       case "RPUSH":
         rPushHandler(connection, commands);
+        break;
+      case "LRANGE":
+        lRangeHandler(connection, commands);
         break;
       default:
         connection.write("-ERR unknown command\r\n");
