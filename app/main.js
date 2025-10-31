@@ -126,14 +126,24 @@ const handler = (store) => {
 
     lPop: (commands) => {
       const listKey = commands[4];
+      const amount = commands[6];
 
       const list = store[listKey];
       if (!list) {
         return response.nullBulkString;
       }
 
-      const item = list.shift();
-      return `+${item}`;
+      const items = [];
+
+      for (let i = 0; i < amount; i++) {
+        items.push(list.shift());
+      }
+
+      const res = `*${items.length}`;
+      items.filter(Boolean).forEach((element) => {
+        res += `\r\n$${element.length}\r\n`;
+        res += `${element}`;
+      });
     },
 
     lRange: (commands) => {
