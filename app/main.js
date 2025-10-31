@@ -91,7 +91,7 @@ const handler = (store) => {
       }
 
       elements.forEach((element) => {
-        store[listKey].unshift(element);
+        store[listKey].shift(element);
       });
 
       return `:${store[listKey].length}`;
