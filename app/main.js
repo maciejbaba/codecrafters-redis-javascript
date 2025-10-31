@@ -103,14 +103,10 @@ const lRangeHandler = (connection, commands) => {
     return;
   }
 
-  const startIndex =
-    Number(commands[6]) < 0
-      ? list.length < Number(Math.abs(commands[6]))
-        ? list.length
-        : list.length - Number(Math.abs(commands[6]))
-      : Number(commands[6]);
+  let startIndex = Number(commands[6]);
   const endIndex = Number(commands[8]);
 
+  // positive indexes
   // start index bigger than end index - empty array return
   if (startIndex > endIndex && endIndex > 0) {
     connection.write(response.emptyArray);
@@ -119,6 +115,13 @@ const lRangeHandler = (connection, commands) => {
 
   // start greater or equal list length - empty array return
   const listLength = list.length;
+
+  // if we have -6 on a 5 length list for example
+  // we treat then the start index as a start of the list so we zero it here
+  if (Math.abs(startIndex) > listLength) {
+    startIndex = 0;
+  }
+
   if (startIndex >= listLength) {
     connection.write(response.emptyArray);
     return;
