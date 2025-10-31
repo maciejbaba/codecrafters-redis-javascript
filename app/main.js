@@ -151,11 +151,11 @@ const handler = (store) => {
       } else {
         requestedList = list.slice(startIndex, endIndex + 1);
       }
-      let res = `*${requestedList.length}\r\n`;
+      let res = `*${requestedList.length}`;
 
       requestedList.forEach((element) => {
-        res += `$${element.length}\r\n`;
-        res += `${element}\r\n`;
+        res += `\r\n$${element.length}\r\n`;
+        res += `${element}`;
       });
 
       return res;
@@ -198,7 +198,7 @@ const server = net.createServer((connection) => {
       default:
         returnText = "-ERR unknown command";
     }
-    console.log(store)
+    console.log(store);
     if (returnText) {
       return connection.write(returnText + "\r\n");
     }
