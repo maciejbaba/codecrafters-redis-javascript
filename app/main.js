@@ -4,7 +4,7 @@ const response = {
   emptyArray: "*0",
   ok: "+OK",
   pong: "+PONG",
-  emptyGet: "$-1",
+  nullBulkString: "$-1",
 };
 
 const store = {};
@@ -70,13 +70,13 @@ const handler = (store) => {
 
       if (expiry && Date.now() >= expiry) {
         store[key] = undefined;
-        return response.emptyGet;
+        return response.nullBulkString;
       }
       const value = storeValue.value;
       if (value) {
         return `+${value}`;
       } else {
-        return response.emptyGet;
+        return response.nullBulkString;
       }
     },
 
@@ -122,6 +122,18 @@ const handler = (store) => {
       }
 
       return `:${list.length}`;
+    },
+
+    lPop: (commands) => {
+      const listKey = commands[4];
+
+      const list = store[listKey];
+      if (!list) {
+        return response.nullBulkString;
+      }
+
+      const item = list.shift();
+      return `+${item}`;
     },
 
     lRange: (commands) => {
@@ -208,6 +220,9 @@ const server = net.createServer((connection) => {
         break;
       case "LLEN":
         returnText = h.lLen(commands);
+        break;
+      case "LPOP":
+        return (text = h.lPop(commands));
         break;
       default:
         returnText = "-ERR unknown command";
