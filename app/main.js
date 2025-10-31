@@ -222,7 +222,7 @@ const server = net.createServer((connection) => {
         returnText = h.lLen(commands);
         break;
       case "LPOP":
-        return (text = h.lPop(commands));
+        returnText = h.lPop(commands);
         break;
       default:
         returnText = "-ERR unknown command";
