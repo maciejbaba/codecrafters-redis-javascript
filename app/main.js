@@ -14,7 +14,7 @@ console.log("Logs from your program will appear here!");
 
 const handler = (store) => {
   const getElements = (commands) => {
-    const startIndex = 6;
+    let startIndex = 6;
     const elements = [];
     while (commands[startIndex]) {
       elements.push(commands[startIndex]);
