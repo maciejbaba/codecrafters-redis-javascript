@@ -91,7 +91,7 @@ const handler = (store) => {
       }
 
       elements.forEach((element) => {
-        store[listKey].shift(element);
+        store[listKey].unshift(element);
       });
 
       return `:${store[listKey].length}`;
@@ -198,6 +198,7 @@ const server = net.createServer((connection) => {
       default:
         returnText = "-ERR unknown command";
     }
+    console.log(store)
     if (returnText) {
       return connection.write(returnText + "\r\n");
     }
