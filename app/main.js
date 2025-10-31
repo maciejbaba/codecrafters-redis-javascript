@@ -91,7 +91,7 @@ const handler = (store) => {
       } else {
         store[listKey] = [...elements, ...storeValue];
       }
-      return `*${store[listKey].length}`;
+      return `:${store[listKey].length}`;
     },
 
     rPush: (commands) => {
