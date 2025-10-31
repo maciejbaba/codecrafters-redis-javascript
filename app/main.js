@@ -151,8 +151,6 @@ const handler = (store) => {
       } else {
         requestedList = list.slice(startIndex, endIndex + 1);
       }
-      console.log(startIndex);
-      console.log(endIndex);
       let res = `*${requestedList.length}\r\n`;
 
       requestedList.forEach((element) => {
@@ -200,8 +198,9 @@ const server = net.createServer((connection) => {
       default:
         returnText = "-ERR unknown command";
     }
-
-    return connection.write(returnText + "\r\n");
+    if (returnText) {
+      return connection.write(returnText + "\r\n");
+    }
   });
 });
 server.listen(6379, "127.0.0.1");
