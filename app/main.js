@@ -113,6 +113,17 @@ const handler = (store) => {
       return `:${store[listKey].length}`;
     },
 
+    lLen: (commands) => {
+      const listKey = commands[4];
+
+      const list = store[listKey];
+      if (!list) {
+        return ":0";
+      }
+
+      return `:${list.length}`;
+    },
+
     lRange: (commands) => {
       const listKey = commands[4];
 
@@ -194,6 +205,9 @@ const server = net.createServer((connection) => {
         break;
       case "LRANGE":
         returnText = h.lRange(commands);
+        break;
+      case "LLEN":
+        returnText = h.lLen(commands);
         break;
       default:
         returnText = "-ERR unknown command";
