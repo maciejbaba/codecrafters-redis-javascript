@@ -87,10 +87,13 @@ const handler = (store) => {
 
       const storeValue = store[listKey];
       if (!storeValue) {
-        store[listKey] = [...elements];
-      } else {
-        store[listKey] = [...elements, ...storeValue];
+        store[listKey] = [];
       }
+
+      elements.forEach((element) => {
+        store[listKey].unshift(element);
+      });
+
       return `:${store[listKey].length}`;
     },
 
@@ -101,10 +104,12 @@ const handler = (store) => {
 
       const storeValue = store[listKey];
       if (!storeValue) {
-        store[listKey] = [...elements];
-      } else {
-        store[listKey] = [...storeValue, ...elements];
+        store[listKey] = [];
       }
+      elements.forEach((element) => {
+        store[listKey].push(element);
+      });
+
       return `:${store[listKey].length}`;
     },
 
