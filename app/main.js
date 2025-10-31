@@ -133,6 +133,10 @@ const handler = (store) => {
         return response.nullBulkString;
       }
 
+      if (!amount) {
+        return items.shift();
+      }
+
       const items = [];
 
       for (let i = 0; i < amount; i++) {
