@@ -144,6 +144,7 @@ const handler = (store) => {
         res += `\r\n$${element.length}\r\n`;
         res += `${element}`;
       });
+      return res;
     },
 
     lRange: (commands) => {
