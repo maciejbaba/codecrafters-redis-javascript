@@ -134,7 +134,7 @@ const handler = (store) => {
       }
 
       if (!amount) {
-        return items.shift();
+        return list.shift();
       }
 
       const items = [];
