@@ -139,7 +139,7 @@ const handler = (store) => {
         items.push(list.shift());
       }
 
-      const res = `*${items.length}`;
+      let res = `*${items.length}`;
       items.filter(Boolean).forEach((element) => {
         res += `\r\n$${element.length}\r\n`;
         res += `${element}`;
