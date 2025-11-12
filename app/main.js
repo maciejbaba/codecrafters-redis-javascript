@@ -140,19 +140,24 @@ const handler = (store) => {
       const timeout = Number(commands[6]);
 
       const list = store[listKey];
-      const firstItem = list[0];
 
       // simplest route - list defined and item in it
-      if (list && firstItem) {
-        return response.buildArrayResponse([listKey, list.shift()]);
+      if (list) {
+        const firstItem = list[0];
+        if (firstItem) {
+          return response.buildArrayResponse([listKey, list.shift()]);
+        }
       }
 
       if (timeout === 0) {
         while (true) {
           await wait(10);
           const list = store[listKey];
+          if (!list) {
+            continue;
+          }
           const firstItem = list[0];
-          if (list && firstItem) {
+          if (firstItem) {
             return response.buildArrayResponse([listKey, list.shift()]);
           }
         }
@@ -163,10 +168,15 @@ const handler = (store) => {
         while (totalWait < timeout * 1000) {
           await wait(10);
           totalWait += 10;
+
           const list = store[listKey];
+          if (!list) {
+            continue;
+          }
+
           const firstItem = list[0];
-          if (list && firstItem) {
-            return response.buildArrayResponse([listKey, firstItem]);
+          if (firstItem) {
+            return response.buildArrayResponse([listKey, list.shift()]);
           }
         }
       }
