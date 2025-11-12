@@ -18,7 +18,7 @@ const response = {
 
 const store = {};
 
-const wait = async (ms) => new Promise((resolve) => setTimeout(resolve(), ms));
+const wait = async (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // You can use print statements as follows for debugging, they'll be visible when running tests.
 console.log("Logs from your program will appear here!");
@@ -121,8 +121,6 @@ const handler = (store) => {
         store[listKey].push(element);
       });
 
-      console.log(store)
-
       return `:${store[listKey].length}`;
     },
 
@@ -158,7 +156,7 @@ const handler = (store) => {
           if (!list) {
             continue;
           }
-          console.log(list)
+          console.log(list);
           const firstItem = list[0];
           if (firstItem) {
             return response.buildArrayResponse([listKey, list.shift()]);
