@@ -195,7 +195,7 @@ const handler = (store) => {
       // else process multiple lpops
       if (!amount) {
         const item = list.shift();
-        return `$${item.length}\r\n${list.shift()}`;
+        return `$${item.length}\r\n${item}`
       }
 
       const items = [];
