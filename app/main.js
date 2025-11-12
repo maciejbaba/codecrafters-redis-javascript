@@ -151,7 +151,7 @@ const handler = (store) => {
 
       if (timeout === 0) {
         while (true) {
-          await wait(10);
+          await wait(100);
           const list = store[listKey];
           console.log(list)
           if (!list) {
