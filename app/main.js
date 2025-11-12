@@ -184,7 +184,7 @@ const handler = (store) => {
 
     lPop: (commands) => {
       const listKey = commands[4];
-      const amount = commands[6];
+      const amount = Number(commands[6]);
 
       const list = store[listKey];
       if (!list) {
@@ -203,7 +203,6 @@ const handler = (store) => {
         items.push(list.shift());
       }
 
-      console.log(response.buildArrayResponse(items))
       return response.buildArrayResponse(items);
     },
 
