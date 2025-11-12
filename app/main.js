@@ -5,9 +5,20 @@ const response = {
   ok: "+OK",
   pong: "+PONG",
   nullBulkString: "$-1",
+  nullArray: "*-1",
+  buildArrayResponse: (items) => {
+    let res = `*${items.length}`;
+    items.filter(Boolean).forEach((element) => {
+      res += `\r\n$${element.length}\r\n`;
+      res += `${element}`;
+    });
+    return res;
+  },
 };
 
 const store = {};
+
+const wait = async (ms) => new Promise((resolve) => setTimeout(resolve(), ms));
 
 // You can use print statements as follows for debugging, they'll be visible when running tests.
 console.log("Logs from your program will appear here!");
@@ -124,6 +135,43 @@ const handler = (store) => {
       return `:${list.length}`;
     },
 
+    blPop: async (commands) => {
+      const listKey = commands[4];
+      const timeout = Number(commands[6]);
+
+      const list = store[listKey];
+      const firstItem = list[0];
+
+      // simplest route - list defined and item in it
+      if (list && firstItem) {
+        return response.buildArrayResponse([listKey, list.shift()]);
+      }
+
+      if (timeout === 0) {
+        while (true) {
+          await wait(10);
+          const list = store[listKey];
+          const firstItem = list[0];
+          if (list && firstItem) {
+            return response.buildArrayResponse([listKey, list.shift()]);
+          }
+        }
+      }
+
+      if (timeout) {
+        let totalWait = 0;
+        while (totalWait < timeout * 1000) {
+          await wait(10);
+          totalWait += 10;
+          const list = store[listKey];
+          const firstItem = list[0];
+          if (list && firstItem) {
+            return response.buildArrayResponse([listKey, firstItem]);
+          }
+        }
+      }
+    },
+
     lPop: (commands) => {
       const listKey = commands[4];
       const amount = commands[6];
@@ -133,6 +181,8 @@ const handler = (store) => {
         return response.nullBulkString;
       }
 
+      // early return - no amount - single lpop - return string single element
+      // else process multiple lpops
       if (!amount) {
         return `+${list.shift()}`;
       }
@@ -143,12 +193,7 @@ const handler = (store) => {
         items.push(list.shift());
       }
 
-      let res = `*${items.length}`;
-      items.filter(Boolean).forEach((element) => {
-        res += `\r\n$${element.length}\r\n`;
-        res += `${element}`;
-      });
-      return res;
+      return response.buildArrayResponse(items);
     },
 
     lRange: (commands) => {
@@ -189,21 +234,15 @@ const handler = (store) => {
       } else {
         requestedList = list.slice(startIndex, endIndex + 1);
       }
-      let res = `*${requestedList.length}`;
 
-      requestedList.forEach((element) => {
-        res += `\r\n$${element.length}\r\n`;
-        res += `${element}`;
-      });
-
-      return res;
+      return response.buildArrayResponse(requestedList);
     },
   };
 };
 
 // Uncomment the code below to pass the first stage
 const server = net.createServer((connection) => {
-  connection.on("data", (data) => {
+  connection.on("data", async (data) => {
     const commands = data.toString().split("\r\n");
     const command = commands[2];
 
@@ -239,10 +278,12 @@ const server = net.createServer((connection) => {
       case "LPOP":
         returnText = h.lPop(commands);
         break;
+      case "BLPOP":
+        returnText = await h.blPop(commands);
+        break;
       default:
         returnText = "-ERR unknown command";
     }
-    console.log(store);
     if (returnText) {
       return connection.write(returnText + "\r\n");
     }
