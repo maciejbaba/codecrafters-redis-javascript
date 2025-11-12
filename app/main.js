@@ -138,6 +138,8 @@ const handler = (store) => {
     blPop: async (commands) => {
       const listKey = commands[4];
       const timeout = Number(commands[6]);
+      console.log("listKey", listKey)
+      console.log("timeout", timeout)
 
       const list = store[listKey];
 
@@ -158,7 +160,6 @@ const handler = (store) => {
           }
           const firstItem = list[0];
           if (firstItem) {
-            console.log(response.buildArrayResponse([listKey, firstItem]))
             return response.buildArrayResponse([listKey, list.shift()]);
           }
         }
