@@ -121,6 +121,8 @@ const handler = (store) => {
         store[listKey].push(element);
       });
 
+      console.log(store)
+
       return `:${store[listKey].length}`;
     },
 
