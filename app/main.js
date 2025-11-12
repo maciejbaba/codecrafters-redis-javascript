@@ -151,12 +151,11 @@ const handler = (store) => {
 
       if (timeout === 0) {
         while (true) {
-          await wait(100);
+          await wait(10);
           const list = store[listKey];
           if (!list) {
             continue;
           }
-          console.log(list);
           const firstItem = list[0];
           if (firstItem) {
             return response.buildArrayResponse([listKey, list.shift()]);
