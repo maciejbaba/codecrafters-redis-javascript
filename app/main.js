@@ -194,7 +194,8 @@ const handler = (store) => {
       // early return - no amount - single lpop - return string single element
       // else process multiple lpops
       if (!amount) {
-        return `$${list.shift()}`;
+        const item = list.shift();
+        return `$${item.length}\r\n${list.shift()}`;
       }
 
       const items = [];
