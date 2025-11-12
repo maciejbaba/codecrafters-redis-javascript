@@ -85,7 +85,7 @@ const handler = (store) => {
       }
       const value = storeValue.value;
       if (value) {
-        return `+${value}`;
+        return `$${value.length}\r\n${value}`;
       } else {
         return response.nullBulkString;
       }
@@ -195,7 +195,7 @@ const handler = (store) => {
       // else process multiple lpops
       if (!amount) {
         const item = list.shift();
-        return `$${item.length}\r\n${item}`
+        return `$${item.length}\r\n${item}`;
       }
 
       const items = [];
