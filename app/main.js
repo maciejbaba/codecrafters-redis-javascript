@@ -203,6 +203,7 @@ const handler = (store) => {
         items.push(list.shift());
       }
 
+      console.log(response.buildArrayResponse(items))
       return response.buildArrayResponse(items);
     },
 
