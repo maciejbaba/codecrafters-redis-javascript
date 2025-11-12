@@ -41,7 +41,7 @@ const handler = (store) => {
 
     echo: (commands) => {
       const message = commands[4];
-      return `+${message}`;
+      return `$${message.length}\r\n${message}`;
     },
 
     set: (commands) => {
