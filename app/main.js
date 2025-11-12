@@ -158,6 +158,7 @@ const handler = (store) => {
           }
           const firstItem = list[0];
           if (firstItem) {
+            console.log(response.buildArrayResponse([listKey, firstItem]))
             return response.buildArrayResponse([listKey, list.shift()]);
           }
         }
