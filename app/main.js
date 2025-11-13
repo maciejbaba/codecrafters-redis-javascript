@@ -179,6 +179,8 @@ const handler = (store) => {
             return response.buildArrayResponse([listKey, list.shift()]);
           }
         }
+        // expired timeout
+        return response.nullArray;
       }
     },
 
