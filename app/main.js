@@ -63,17 +63,8 @@ const handler = (store) => {
         return response.fixed.type.none;
       }
 
-      console.log(value)
-      console.log(typeof value === "string")
-      console.log(typeof value)
-
-      switch (value) {
-        case Array.isArray(value):
-          return response.fixed.type.list;
-        case typeof value === "string":
-          console.log("im here");
-          return response.fixed.type.string;
-      }
+      if (Array.isArray(value)) return response.fixed.type.list;
+      if (typeof value === "string") return response.fixed.type.string;
     },
 
     set: (commands) => {
