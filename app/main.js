@@ -46,7 +46,7 @@ const handler = (store) => {
 
   return {
     ping: () => {
-      return response.pong;
+      return response.fixed.pong;
     },
 
     echo: (commands) => {
@@ -59,7 +59,7 @@ const handler = (store) => {
 
       const item = store[key];
       if (!item) {
-        return response.none;
+        return response.fixed.none;
       }
 
       switch (item) {
@@ -82,7 +82,7 @@ const handler = (store) => {
           value,
           expiry: null,
         };
-        return response.ok;
+        return response.fixed.ok;
       }
 
       if (expiry === "EX") {
@@ -90,13 +90,13 @@ const handler = (store) => {
           value,
           expiry: Date.now() + expiryValue * 1000,
         };
-        return response.ok;
+        return response.fixed.ok;
       } else if (expiry === "PX") {
         store[key] = {
           value,
           expiry: Date.now() + expiryValue,
         };
-        return response.ok;
+        return response.fixed.ok;
       }
     },
 
@@ -107,13 +107,13 @@ const handler = (store) => {
 
       if (expiry && Date.now() >= expiry) {
         store[key] = undefined;
-        return response.nullBulkString;
+        return response.fixed.nullBulkString;
       }
       const value = storeValue.value;
       if (value) {
         return `$${value.length}\r\n${value}`;
       } else {
-        return response.nullBulkString;
+        return response.fixed.nullBulkString;
       }
     },
 
@@ -206,7 +206,7 @@ const handler = (store) => {
           }
         }
         // expired timeout
-        return response.nullArray;
+        return response.fixed.nullArray;
       }
     },
 
@@ -216,7 +216,7 @@ const handler = (store) => {
 
       const list = store[listKey];
       if (!list) {
-        return response.nullBulkString;
+        return response.fixed.nullBulkString;
       }
 
       // early return - no amount - single lpop - return string single element
@@ -242,7 +242,7 @@ const handler = (store) => {
 
       // not defined list in the store - empty array return
       if (!list) {
-        return response.emptyArray;
+        return response.fixed.emptyArray;
       }
 
       let startIndex = Number(commands[6]);
@@ -251,7 +251,7 @@ const handler = (store) => {
       // positive indexes
       // start index bigger than end index - empty array return
       if (startIndex > endIndex && endIndex > 0) {
-        return response.emptyArray;
+        return response.fixed.emptyArray;
       }
 
       // start greater or equal list length - empty array return
@@ -264,7 +264,7 @@ const handler = (store) => {
       }
 
       if (startIndex >= listLength) {
-        return response.emptyArray;
+        return response.fixed.emptyArray;
       }
 
       let requestedList = [];
