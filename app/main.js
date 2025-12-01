@@ -74,8 +74,6 @@ const handler = (store) => {
       const key = commands[4];
       const value = commands[6];
 
-      console.log("test")
-
       const expiry = commands[8];
       const expiryValue = Number(commands[10]);
 
@@ -290,6 +288,8 @@ const server = net.createServer((connection) => {
     const h = handler(store);
 
     let returnText = "";
+
+    console.log(command)
 
     switch (command) {
       case "PING":
