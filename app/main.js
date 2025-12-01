@@ -59,7 +59,7 @@ const handler = (store) => {
 
       const item = store[key];
       if (!item) {
-        return response.fixed.none;
+        return response.fixed.type.none;
       }
 
       switch (item) {
