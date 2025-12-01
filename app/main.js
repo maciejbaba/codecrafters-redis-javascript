@@ -296,6 +296,9 @@ const server = net.createServer((connection) => {
       case "ECHO":
         returnText = h.echo(commands);
         break;
+      case "TYPE":
+        returnText = h.type(commands);
+        break;
       case "SET":
         returnText = h.set(commands);
         break;
