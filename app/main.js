@@ -58,10 +58,13 @@ const handler = (store) => {
       const key = commands[4];
 
       const item = store[key];
-      const value = item.value
+      const value = item.value;
       if (!item) {
         return response.fixed.type.none;
       }
+
+      console.log(value);
+      console.log(typeof value);
 
       switch (value) {
         case Array.isArray(value):
