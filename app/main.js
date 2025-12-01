@@ -58,10 +58,10 @@ const handler = (store) => {
       const key = commands[4];
 
       const item = store[key];
-      const value = item.value;
       if (!item) {
         return response.fixed.type.none;
       }
+      const value = item.value;
 
       if (Array.isArray(value)) return response.fixed.type.list;
       if (typeof value === "string") return response.fixed.type.string;
