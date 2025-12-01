@@ -1,18 +1,28 @@
 const net = require("net");
 
 const response = {
-  emptyArray: "*0",
-  ok: "+OK",
-  pong: "+PONG",
-  nullBulkString: "$-1",
-  nullArray: "*-1",
-  buildArrayResponse: (items) => {
-    let res = `*${items.length}`;
-    items.filter(Boolean).forEach((element) => {
-      res += `\r\n$${element.length}\r\n`;
-      res += `${element}`;
-    });
-    return res;
+  fixed: {
+    emptyArray: "*0",
+    ok: "+OK",
+    pong: "+PONG",
+    nullBulkString: "$-1",
+    nullArray: "*-1",
+    type: {
+      none: "+none",
+      string: "+string",
+      list: "+list",
+    },
+  },
+
+  build: {
+    array: (items) => {
+      let res = `*${items.length}`;
+      items.filter(Boolean).forEach((element) => {
+        res += `\r\n$${element.length}\r\n`;
+        res += `${element}`;
+      });
+      return res;
+    },
   },
 };
 
@@ -42,6 +52,22 @@ const handler = (store) => {
     echo: (commands) => {
       const message = commands[4];
       return `$${message.length}\r\n${message}`;
+    },
+
+    type: (commands) => {
+      const key = commands[4];
+
+      const item = store[key];
+      if (!item) {
+        return response.none;
+      }
+
+      switch (item) {
+        case Array.isArray(item):
+          return response.fixed.type.list;
+        case typeof item === "string":
+          return response.fixed.type.string;
+      }
     },
 
     set: (commands) => {
@@ -145,7 +171,7 @@ const handler = (store) => {
       if (list) {
         const firstItem = list[0];
         if (firstItem) {
-          return response.buildArrayResponse([listKey, list.shift()]);
+          return response.build.array([listKey, list.shift()]);
         }
       }
 
@@ -158,7 +184,7 @@ const handler = (store) => {
           }
           const firstItem = list[0];
           if (firstItem) {
-            return response.buildArrayResponse([listKey, list.shift()]);
+            return response.build.array([listKey, list.shift()]);
           }
         }
       }
@@ -176,7 +202,7 @@ const handler = (store) => {
 
           const firstItem = list[0];
           if (firstItem) {
-            return response.buildArrayResponse([listKey, list.shift()]);
+            return response.build.array([listKey, list.shift()]);
           }
         }
         // expired timeout
@@ -206,7 +232,7 @@ const handler = (store) => {
         items.push(list.shift());
       }
 
-      return response.buildArrayResponse(items);
+      return response.build.array(items);
     },
 
     lRange: (commands) => {
@@ -248,7 +274,7 @@ const handler = (store) => {
         requestedList = list.slice(startIndex, endIndex + 1);
       }
 
-      return response.buildArrayResponse(requestedList);
+      return response.build.array(requestedList);
     },
   };
 };
