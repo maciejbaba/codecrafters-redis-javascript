@@ -57,6 +57,7 @@ const handler = (store) => {
     type: (commands) => {
       const key = commands[4];
 
+      console.log(key)
       const item = store[key];
       if (!item) {
         return response.fixed.type.none;
