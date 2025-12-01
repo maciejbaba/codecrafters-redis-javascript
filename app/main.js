@@ -289,8 +289,6 @@ const server = net.createServer((connection) => {
 
     let returnText = "";
 
-    console.log(command)
-
     switch (command) {
       case "PING":
         returnText = h.ping();
@@ -328,6 +326,7 @@ const server = net.createServer((connection) => {
       default:
         returnText = "-ERR unknown command";
     }
+    console.log(returnText);
     if (returnText) {
       return connection.write(returnText + "\r\n");
     }
