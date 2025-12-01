@@ -63,6 +63,10 @@ const handler = (store) => {
         return response.fixed.type.none;
       }
 
+      console.log(value)
+      console.log(typeof value === "string")
+      console.log(typeof value)
+
       switch (value) {
         case Array.isArray(value):
           return response.fixed.type.list;
@@ -328,7 +332,6 @@ const server = net.createServer((connection) => {
       default:
         returnText = "-ERR unknown command";
     }
-    console.log(returnText);
     if (returnText) {
       return connection.write(returnText + "\r\n");
     }
