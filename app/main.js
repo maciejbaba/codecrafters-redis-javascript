@@ -75,7 +75,7 @@ const handler = (store) => {
       const elements = getElements(commands);
 
       const pairedElements = [];
-      const pair = [];
+      let pair = [];
       elements.forEach((element) => {
         pair.push(element);
         if (pair.length === 2) {
