@@ -317,6 +317,9 @@ const server = net.createServer((connection) => {
       case "TYPE":
         returnText = h.type(commands);
         break;
+      case "XADD":
+        returnText = h.xAdd(commands);
+        break;
       case "SET":
         returnText = h.set(commands);
         break;
