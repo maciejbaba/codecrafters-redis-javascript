@@ -88,7 +88,7 @@ const handler = (store) => {
       });
       store[streamKey] = { id: entryId, entries: [pairedElements] };
 
-      return `$${streamKey.length}\r\n${streamKey}`;
+      return `$${entryId.length}\r\n${entryId}`;
     },
 
     set: (commands) => {
