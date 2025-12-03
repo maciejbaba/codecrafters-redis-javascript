@@ -11,6 +11,7 @@ const response = {
       none: "+none",
       string: "+string",
       list: "+list",
+      stream: "+stream",
     },
   },
 
@@ -62,9 +63,29 @@ const handler = (store) => {
         return response.fixed.type.none;
       }
       const value = item.value;
+      const type = item.type;
 
+      if (type === "stream") return response.fixed.type.stream;
       if (Array.isArray(value)) return response.fixed.type.list;
       if (typeof value === "string") return response.fixed.type.string;
+    },
+
+    xAdd: (commands) => {
+      const streamKey = commands[4];
+      const elements = getElements(commands);
+
+      const pairedElements = [];
+      const pair = [];
+      elements.forEach((element) => {
+        pair.push(element);
+        if (pair.length === 2) {
+          pairedElements.push(pair);
+          pair = [];
+        }
+      });
+      store[streamKey] = [...pairedElements];
+
+      return `$${streamKey.length}\r\n${streamKey}`;
     },
 
     set: (commands) => {
