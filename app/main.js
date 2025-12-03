@@ -35,8 +35,9 @@ const wait = async (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 console.log("Logs from your program will appear here!");
 
 const handler = (store) => {
-  const getElements = (commands) => {
+  const getElements = (commands, isStream) => {
     let startIndex = 6;
+    if (isStream) startIndex = 8;
     const elements = [];
     while (commands[startIndex]) {
       elements.push(commands[startIndex]);
@@ -63,16 +64,18 @@ const handler = (store) => {
         return response.fixed.type.none;
       }
       const value = item.value;
-      const type = item.type;
+      const id = item.id;
 
-      if (type === "stream") return response.fixed.type.stream;
+      if (item.id) return response.fixed.type.stream;
       if (Array.isArray(value)) return response.fixed.type.list;
       if (typeof value === "string") return response.fixed.type.string;
     },
 
     xAdd: (commands) => {
       const streamKey = commands[4];
-      const elements = getElements(commands);
+      const entryId = commands[6];
+      const isStream = true;
+      const elements = getElements(commands, isStream);
 
       const pairedElements = [];
       let pair = [];
@@ -83,7 +86,7 @@ const handler = (store) => {
           pair = [];
         }
       });
-      store[streamKey] = [...pairedElements];
+      store[streamKey] = { id: entryId, entries: [pairedElements] };
 
       return `$${streamKey.length}\r\n${streamKey}`;
     },
