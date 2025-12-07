@@ -34,7 +34,6 @@ const response = {
 };
 
 const store = {};
-
 const xAddStore = {};
 
 const wait = async (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -89,7 +88,7 @@ const handler = (store) => {
       }
 
       const [previousMilisecondsTime, previousSequenceNumber] =
-        xAddStore[streamKey]?.previousEntryId.split("-");
+        xAddStore[streamKey] && xAddStore[streamKey].previousEntryId.split("-");
       const [currentMilisecondsTime, currentSequenceNumber] =
         entryId.split("-");
 
