@@ -87,12 +87,9 @@ const handler = (store) => {
         return response.error.zerozero;
       }
 
-      if (!streamKey) {
-        return
-      }
-
+      console.log(xAddStore)
       const [previousMilisecondsTime, previousSequenceNumber] =
-        xAddStore[streamKey] && xAddStore[streamKey].previousEntryId.split("-");
+        xAddStore[streamKey].previousEntryId.split("-");
       const [currentMilisecondsTime, currentSequenceNumber] =
         entryId.split("-");
 
