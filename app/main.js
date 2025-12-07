@@ -89,7 +89,7 @@ const handler = (store) => {
       }
 
       const [previousMilisecondsTime, previousSequenceNumber] =
-        xAddStore[streamKey].previousEntryId.split("-");
+        xAddStore[streamKey]?.previousEntryId.split("-");
       const [currentMilisecondsTime, currentSequenceNumber] =
         entryId.split("-");
 
