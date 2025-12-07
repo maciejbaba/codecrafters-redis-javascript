@@ -15,6 +15,12 @@ const response = {
     },
   },
 
+  error: {
+    zerozero: "-ERR The ID specified in XADD must be greater than 0-0",
+    equalSmallerTop:
+      "-ERR The ID specified in XADD is euqal or smaller than the target stream top item",
+  },
+
   build: {
     array: (items) => {
       let res = `*${items.length}`;
@@ -28,6 +34,8 @@ const response = {
 };
 
 const store = {};
+
+const xAddStore = {};
 
 const wait = async (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -66,7 +74,7 @@ const handler = (store) => {
       const value = item.value;
       const id = item.id;
 
-      if (item.id) return response.fixed.type.stream;
+      if (id) return response.fixed.type.stream;
       if (Array.isArray(value)) return response.fixed.type.list;
       if (typeof value === "string") return response.fixed.type.string;
     },
@@ -74,6 +82,28 @@ const handler = (store) => {
     xAdd: (commands) => {
       const streamKey = commands[4];
       const entryId = commands[6];
+
+      // always invalid
+      if (entryId === "0-0") {
+        return response.error.zerozero;
+      }
+
+      const [previousMilisecondsTime, previousSequenceNumber] =
+        xAddStore[streamKey].previousEntryId.split("-");
+      const [currentMilisecondsTime, currentSequenceNumber] =
+        entryId.split("-");
+
+      if (previousMilisecondsTime > currentMilisecondsTime) {
+        return response.error.equalSmallerTop;
+      }
+
+      // check sequnce only if timestamp same
+      if (previousMilisecondsTime === currentMilisecondsTime) {
+        if (previousSequenceNumber >= currentSequenceNumber) {
+          return response.error.equalSmallerTop;
+        }
+      }
+
       const isStream = true;
       const elements = getElements(commands, isStream);
 
@@ -87,6 +117,9 @@ const handler = (store) => {
         }
       });
       store[streamKey] = { id: entryId, entries: [pairedElements] };
+      xAddStore[streamKey] = {
+        previousEntryId: entryId,
+      };
 
       return `$${entryId.length}\r\n${entryId}`;
     },
