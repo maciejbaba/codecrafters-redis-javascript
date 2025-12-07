@@ -18,7 +18,7 @@ const response = {
   error: {
     zerozero: "-ERR The ID specified in XADD must be greater than 0-0",
     equalSmallerTop:
-      "-ERR The ID specified in XADD is euqal or smaller than the target stream top item",
+      "-ERR The ID specified in XADD is equal or smaller than the target stream top item",
   },
 
   build: {
